@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"github.com/jinzhu/gorm"
 )
@@ -41,6 +43,7 @@ func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, erro
 }
 
 func (repo *UserRepository) Create(user *pb.User) error {
+	fmt.Println(user)
 	if err := repo.db.Create(user).Error; err != nil {
 		return err
 	}
