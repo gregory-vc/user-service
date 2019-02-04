@@ -12,6 +12,7 @@ type Repository interface {
 	Get(id string) (*pb.User, error)
 	Create(user *pb.User) error
 	GetByEmailAndPassword(user *pb.User) (*pb.User, error)
+	GetByEmail(email string) (*pb.User, error)
 }
 
 type UserRepository struct {
