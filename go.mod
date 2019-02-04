@@ -2,6 +2,7 @@ module github.com/gregory-vc/user-service
 
 require (
 	github.com/EwanValentine/shippy v0.0.0-20181206231135-cf1b235f5c09 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.2.1-0.20190109072247-347cf4a86c1c
 	github.com/jinzhu/gorm v1.9.2
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
