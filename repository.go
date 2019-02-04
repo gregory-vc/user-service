@@ -42,6 +42,15 @@ func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, erro
 	return user, nil
 }
 
+func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
+	user := &pb.User{}
+	if err := repo.db.Where("email = ?", email).
+		First(&user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
 func (repo *UserRepository) Create(user *pb.User) error {
 	fmt.Println(user)
 	if err := repo.db.Create(user).Error; err != nil {
