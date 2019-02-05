@@ -7,7 +7,6 @@ import (
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"github.com/micro/go-micro"
 	_ "github.com/micro/go-plugins/broker/nats"
-	"github.com/micro/go-micro/codec/proto"
 )
 
 const topic = "user.created"
@@ -45,11 +44,6 @@ func main() {
 	srv.Init()
 
 	pubsub := srv.Server().Options().Broker
-
-	pubsub.Options().Codec = proto.Marshaler{}
-
-	fmt.Println(pubsub.Options().Codec)
-
 
 	// Register handler
 	pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService, pubsub})
