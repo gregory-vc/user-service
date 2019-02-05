@@ -6,6 +6,7 @@ import (
 
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"github.com/micro/go-micro"
+	_ "github.com/micro/go-plugins/broker/nats"
 )
 
 const topic = "user.created"
