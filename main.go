@@ -45,7 +45,8 @@ func main() {
 
 	pubsub := srv.Server().Options().Broker
 
-	fmt.Println(pubsub.Options())
+	fmt.Println(pubsub.Options().Codec)
+
 
 	// Register handler
 	pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService, pubsub})
