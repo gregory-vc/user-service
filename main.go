@@ -6,7 +6,7 @@ import (
 
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"github.com/micro/go-micro"
-	_ "github.com/micro/go-plugins/broker/nats"
+	"github.com/micro/go-plugins/broker/nats"
 )
 
 const topic = "user.created"
@@ -43,7 +43,7 @@ func main() {
 	// Init will parse the command line flags.
 	srv.Init()
 
-	pubsub := srv.Server().Options().Broker
+	pubsub := nats.NewBroker()
 
 	// Register handler
 	pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService, pubsub})
