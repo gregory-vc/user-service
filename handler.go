@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 
 	pb "github.com/gregory-vc/user-service/proto/user"
@@ -37,6 +38,7 @@ func (srv *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Respons
 
 func (srv *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
 	log.Println("Logging in with:", req.Email, req.Password)
+	fmt.Println(req)
 	user, err := srv.repo.GetByEmail(req.Email)
 	log.Println(user)
 	if err != nil {
@@ -58,6 +60,7 @@ func (srv *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error
 }
 
 func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
+	fmt.Println(req)
 	// Generates a hashed version of our password
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
