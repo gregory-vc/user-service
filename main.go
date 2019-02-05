@@ -8,6 +8,8 @@ import (
 	"github.com/micro/go-micro"
 )
 
+const topic = "user.created"
+
 func main() {
 
 	// Creates a database connection and handles
