@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"github.com/jinzhu/gorm"
 )
@@ -53,7 +51,6 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 }
 
 func (repo *UserRepository) Create(user *pb.User) error {
-	fmt.Println(user)
 	if err := repo.db.Create(user).Error; err != nil {
 		return err
 	}
