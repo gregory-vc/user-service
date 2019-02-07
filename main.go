@@ -7,6 +7,7 @@ import (
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"github.com/micro/go-micro"
 	_ "github.com/micro/go-plugins/broker/nats"
+	k8s "github.com/micro/kubernetes/go/micro"
 )
 
 const topic = "user.created"
@@ -33,7 +34,7 @@ func main() {
 	tokenService := &TokenService{repo}
 
 	// Create a new service. Optionally include some options here.
-	srv := micro.NewService(
+	srv := k8s.NewService(
 
 		// This name must match the package name given in your protobuf definition
 		micro.Name("go.micro.srv.user"),

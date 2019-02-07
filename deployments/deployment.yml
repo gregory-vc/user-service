@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+        containers:
+        - name: user-service
+          image:  eu.gcr.io/my-project-tattoor/user-service:latest
+          imagePullPolicy: Always
+          command: [
+            "./user-service",
+            "--selector=static",
+            "--server_address=:8080"
+          ]
+          env:
+          - name: DB_HOST
+            value: "postgres"
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_NAME
+            value: "postgres"
+          - name: DB_PASSWORD
+            value: "postgres"
+          - name: DB_USER
+            value: "postgres"
+          - name: MICRO_BROKER
+            value: "nats"
+          - name: MICRO_BROKER_ADDRESS
+            value: "nats:4222"
+          - name: UPDATED_AT
+            value: "Чт фев  7 20:37:32 MSK 2019"
+          ports:
+          - containerPort: 8080
+            name: user-port
