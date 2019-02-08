@@ -10,15 +10,8 @@ import (
 	_ "github.com/micro/go-plugins/broker/nats"
 	k8s "github.com/micro/kubernetes/go/micro"
 
-	"github.com/micro/go-micro/broker"
-	"github.com/micro/go-micro/client"
-	"github.com/micro/go-micro/server"
-
-	bkr "github.com/micro/go-plugins/broker/grpc"
-	cli "github.com/micro/go-plugins/client/grpc"
 	_ "github.com/micro/go-plugins/registry/kubernetes"
 	_ "github.com/micro/go-plugins/selector/static"
-	srv "github.com/micro/go-plugins/server/grpc"
 	"github.com/micro/micro/api"
 )
 
@@ -32,11 +25,6 @@ func main() {
 	// set values for registry/selector
 	os.Setenv("MICRO_REGISTRY", "kubernetes")
 	os.Setenv("MICRO_SELECTOR", "static")
-
-	// setup broker/client/server
-	broker.DefaultBroker = bkr.NewBroker()
-	client.DefaultClient = cli.NewClient()
-	server.DefaultServer = srv.NewServer()
 
 	// Creates a database connection and handles
 	// closing it again before exit.
