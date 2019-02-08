@@ -19,6 +19,7 @@ spec:
           command: [
             "./user-service",
             "--selector=static",
+            "--registry=kubernetes",
             "--server_address=:8080"
           ]
           env:
@@ -37,7 +38,7 @@ spec:
           - name: MICRO_BROKER_ADDRESS
             value: "nats:4222"
           - name: UPDATED_AT
-            value: "Пт фев  8 14:30:21 MSK 2019"
+            value: "Пт фев  8 14:40:41 MSK 2019"
           ports:
           - containerPort: 8080
             name: user-port
