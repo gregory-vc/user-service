@@ -165,8 +165,10 @@ github.com/googleapis/gnostic v0.2.0/go.mod h1:sJBsCZ4ayReDTBIg8b9dl28c5xFWyhBTV
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/gorilla/context v1.1.1/go.mod h1:kBGZzfjB9CEq2AlWe17Uuf7NDRt0dE0s8S51q0aT7Yg=
+github.com/gorilla/handlers v1.4.0 h1:XulKRWSQK5uChr4pEgSE4Tc/OcmnU9GJuSwdog/tZsA=
 github.com/gorilla/handlers v1.4.0/go.mod h1:Qkdc/uu4tH4g6mTK6auzZ766c4CA0Ng8+o/OAirnOIQ=
 github.com/gorilla/mux v1.6.2/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
+github.com/gorilla/mux v1.7.0 h1:tOSd0UKHQd6urX6ApfOn4XdBMY6Sh1MfxV3kmaazO+U=
 github.com/gorilla/mux v1.7.0/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
 github.com/gorilla/websocket v0.0.0-20170926233335-4201258b820c/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=
 github.com/gorilla/websocket v1.4.0/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=
@@ -230,6 +232,7 @@ github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a/go.mod h1:h+uFLl
 github.com/jmespath/go-jmespath v0.0.0-20160202185014-0b12d6b521d8/go.mod h1:Nht3zPeWKUH0NzdCt2Blrr5ys8VGpn0CEB0cQHVjt7k=
 github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af/go.mod h1:Nht3zPeWKUH0NzdCt2Blrr5ys8VGpn0CEB0cQHVjt7k=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
+github.com/joncalhoun/qson v0.0.0-20170526102502-8a9cab3a62b1 h1:lnrOS18wZBYrzdDmnUeg1OVk+kQ3rxG8mZWU89DpMIA=
 github.com/joncalhoun/qson v0.0.0-20170526102502-8a9cab3a62b1/go.mod h1:DFXrEwSRX0p/aSvxE21319menCBFeQO0jXpRj7LEZUA=
 github.com/json-iterator/go v1.1.5 h1:gL2yXlmiIo4+t+y32d4WGwOjKGYcGOuyrg46vadswDE=
 github.com/json-iterator/go v1.1.5/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
@@ -261,6 +264,7 @@ github.com/micro/cli v0.1.0/go.mod h1:jRT9gmfVKWSS6pkKcXQ8YhUyj6bzwxK8Fp5b0Y7qNn
 github.com/micro/examples v0.0.0-20190130075939-4c88706279b7/go.mod h1:kAtxC8sjgEmhvistg+9GLxPiI/80SYSAMXObHcs1CFw=
 github.com/micro/examples v0.1.0/go.mod h1:ye1KFooRPX3Iudk0QP+E4Yx3K855v1SqEn1a/G5Z+WY=
 github.com/micro/go-api v0.5.0/go.mod h1:itWuEfGqJNM5q5hct5LWYFSxwPZWyngnrRpgMQJxlA0=
+github.com/micro/go-api v0.6.0 h1:RLf5cbwsatl24oZvrXqQ+n/YTAOkfSx6/j+iqNQ64cw=
 github.com/micro/go-api v0.6.0/go.mod h1:GR6fcdDJU0ltEcqyk+5GvKOzfYsGMLes2s58XfwKCVM=
 github.com/micro/go-bot v0.1.0/go.mod h1:wodQnZJedhANtriMfhCJa07WK6UnZE2QFNNRlmL3NoI=
 github.com/micro/go-config v0.13.3/go.mod h1:fVecLls1kW+EJsrlkJYqUmVoJa1epSHhsPMDXppELx0=
@@ -296,6 +300,7 @@ github.com/micro/mdns v0.1.0/go.mod h1:KJ0dW7KmicXU2BV++qkLlmHYcVv7/hHnbtguSWt9A
 github.com/micro/micro v0.20.0/go.mod h1:fkfl/b2vWYkKiUgYW/3uw8OVZTxE/ARw761basyjcBY=
 github.com/micro/micro v0.22.0/go.mod h1:P9n/z0/T/F0h3ywgKACNaRlXQitOQtGrYVfhEzmIvw0=
 github.com/micro/micro v0.22.1/go.mod h1:P9n/z0/T/F0h3ywgKACNaRlXQitOQtGrYVfhEzmIvw0=
+github.com/micro/micro v0.23.2 h1:O5DPhuRhh20xV7pfKDUaD8A2H9UOPh2DRRr4E2ijFZ0=
 github.com/micro/micro v0.23.2/go.mod h1:Fxh8P04RkEdpsiSzlwqVJR7+OHR1/7vo2obwCCQnwAc=
 github.com/micro/protobuf v0.0.0-20180321161605-ebd3be6d4fdb h1:7X2fjfHGQUGIqA6PwBpPChDIRrnB0Y0zD0ox3Cqg/Bs=
 github.com/micro/protobuf v0.0.0-20180321161605-ebd3be6d4fdb/go.mod h1:3YhiKlo1uYsab8vkYbrfJ6w9DnpYWGIYWwd0txqveNM=
@@ -354,6 +359,7 @@ github.com/openzipkin/zipkin-go v0.1.1/go.mod h1:NtoC/o8u3JlF1lSlyPNswIbeQH9bJTm
 github.com/openzipkin/zipkin-go v0.1.3/go.mod h1:NtoC/o8u3JlF1lSlyPNswIbeQH9bJTmOf0Erfk+hxe8=
 github.com/openzipkin/zipkin-go v0.1.5/go.mod h1:8NDCjKHoHW1XOp/vf3lClHem0b91r4433B67KXyKXAQ=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
+github.com/pborman/uuid v1.2.0 h1:J7Q5mO4ysT1dv8hyrUGHb9+ooztCXu1D8MY8DZYsu3g=
 github.com/pborman/uuid v1.2.0/go.mod h1:X/NO0urCmaxf9VXbdlT7C2Yzkj2IKimNn4k+gtPdI/k=
 github.com/peterbourgon/diskv v2.0.1+incompatible/go.mod h1:uqqh8zWWbv1HBMNONnaR/tNboyR3/BZd58JJSHlUSCU=
 github.com/philhofer/fwd v1.0.0/go.mod h1:gk3iGcWd9+svBvR0sR+KPcfE+RNWozjowpeBVG3ZVNU=
