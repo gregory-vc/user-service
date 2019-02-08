@@ -3,28 +3,17 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"github.com/micro/go-micro"
 	_ "github.com/micro/go-plugins/broker/nats"
-	k8s "github.com/micro/kubernetes/go/micro"
-
 	_ "github.com/micro/go-plugins/registry/kubernetes"
-	_ "github.com/micro/go-plugins/selector/static"
-	"github.com/micro/micro/api"
+	k8s "github.com/micro/kubernetes/go/micro"
 )
 
 const topic = "user.created"
 
 func main() {
-
-	// disable namespace
-	api.Namespace = ""
-
-	// set values for registry/selector
-	os.Setenv("MICRO_REGISTRY", "kubernetes")
-	os.Setenv("MICRO_SELECTOR", "static")
 
 	// Creates a database connection and handles
 	// closing it again before exit.
