@@ -37,7 +37,7 @@ spec:
           - name: MICRO_BROKER_ADDRESS
             value: "nats:4222"
           - name: UPDATED_AT
-            value: "Чт фев  7 20:37:32 MSK 2019"
+            value: "Пт фев  8 13:07:21 MSK 2019"
           ports:
           - containerPort: 8080
             name: user-port

@@ -37,7 +37,7 @@ func main() {
 	srv := k8s.NewService(
 
 		// This name must match the package name given in your protobuf definition
-		micro.Name("go.micro.srv.user"),
+		micro.Name("user"),
 		micro.Version("latest"),
 	)
 
