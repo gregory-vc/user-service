@@ -14,7 +14,7 @@ spec:
     spec:
         containers:
         - name: user-service
-          image:  eu.gcr.io/my-project-tattoor/user-service:latest
+          image:  eu.gcr.io/hprofits/user-service:latest
           imagePullPolicy: Always
           command: [
             "./user-service",
@@ -38,7 +38,7 @@ spec:
           - name: MICRO_BROKER_ADDRESS
             value: "nats:4222"
           - name: UPDATED_AT
-            value: "Ср фев 13 18:10:27 MSK 2019"
+            value: "Ср фев 13 18:11:44 MSK 2019"
           ports:
           - containerPort: 8080
             name: user-port

@@ -6,8 +6,8 @@ build:
 		git push origin master
 
 registry:
-		docker build -t eu.gcr.io/my-project-tattoor/user-service:latest .
-		gcloud docker -- push eu.gcr.io/my-project-tattoor/user-service:latest
+		docker build -t eu.gcr.io/hprofits/user-service:latest .
+		gcloud docker -- push eu.gcr.io/hprofits/user-service:latest
 
 deploy:
 	protoc -I. --go_out=plugins=micro:. proto/user/user.proto
@@ -16,6 +16,6 @@ deploy:
 	git add --all
 	git diff-index --quiet HEAD || git commit -a -m 'fix'
 	git push origin master
-	docker build -t eu.gcr.io/my-project-tattoor/user-service:latest .
-	gcloud docker -- push eu.gcr.io/my-project-tattoor/user-service:latest
+	docker build -t eu.gcr.io/hprofits/user-service:latest .
+	gcloud docker -- push eu.gcr.io/hprofits/user-service:latest
 	kubectl replace -f ./deployments/deployment.yml
