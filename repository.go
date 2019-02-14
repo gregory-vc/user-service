@@ -60,7 +60,7 @@ func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, erro
 
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	user := pb.User{}
-	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
 	params["email"] = email
