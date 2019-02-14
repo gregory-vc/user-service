@@ -24,7 +24,9 @@ message User {
     string service = 9;
 }
 
-message Request {}
+message Request {
+    repeated uint64 ids = 1;
+}
 
 message Response {
     User user = 1;
