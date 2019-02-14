@@ -88,7 +88,7 @@ func (srv *service) publishEvent(user *pb.User) error {
 	// Create a broker message
 	msg := &broker.Message{
 		Header: map[string]string{
-			"id": user.Id,
+			"id": string(user.Id),
 		},
 		Body: body,
 	}
@@ -110,7 +110,7 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 		return err
 	}
 
-	if claims.User.Id == "" {
+	if claims.User.Id == 0 {
 		return errors.New("invalid user")
 	}
 
