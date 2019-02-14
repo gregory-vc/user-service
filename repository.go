@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 
 	pb "github.com/gregory-vc/user-service/proto/user"
@@ -45,14 +46,38 @@ func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, erro
 
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	user := &pb.User{}
-	// if err := repo.db.Where("email = ?", email).
-	// 	First(&user).Error; err != nil {
-	// 	return nil, err
-	// }
+	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE email ='%s'", couchbaseBucket, email)
+	q := gocb.NewN1qlQuery(queryStr)
+	rows, err := repo.bucket.ExecuteN1qlQuery(q, nil)
+	if err != nil {
+		return nil, err
+	}
+	users := []*pb.User{}
+	for rows.Next(&user) {
+		users = append(users, user)
+	}
+	if len(users) <= 0 {
+		return nil, errors.New("Not found user")
+	} else {
+		return users[0], nil
+	}
 	return user, nil
 }
 
 func (repo *UserRepository) Create(user *pb.User) error {
+
+	user, err := repo.GetByEmail(user.Email)
+
+	fmt.Println(user)
+
+	if err == nil {
+		return errors.New("User already exist")
+	}
+
+	if err != nil && err.Error() != "Not found user" {
+		return err
+	}
+
 	initialValue, _, err := repo.bucket.Counter("user_type", 1, 1, 0)
 	if err != nil {
 		return err
