@@ -55,6 +55,7 @@ func (srv *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error
 	if err != nil {
 		return err
 	}
+
 	res.Token = token
 	return nil
 }
