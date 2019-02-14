@@ -57,8 +57,7 @@ func (repo *UserRepository) Create(user *pb.User) error {
 	if err != nil {
 		return err
 	}
-	userKey := fmt.Sprintf("us_121_er_%d", initialValue)
-	fmt.Println(userKey)
+	userKey := fmt.Sprintf("user_%d", initialValue)
 	user.Id = initialValue
 	user.Type = "user"
 	_, err = repo.bucket.Insert(userKey, user, 0)
