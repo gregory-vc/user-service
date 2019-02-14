@@ -25,13 +25,17 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 	var users []*pb.User
 	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE and type = 'user'", couchbaseBucket)
 	q := gocb.NewN1qlQuery(queryStr)
+
 	rows, err := repo.bucket.ExecuteN1qlQuery(q, nil)
+
 	if err != nil {
 		return nil, err
 	}
+
 	for rows.Next(&user) {
 		users = append(users, user)
 	}
+
 	return users, nil
 }
 
@@ -56,18 +60,23 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE email ='%s' and type = 'user'", couchbaseBucket, email)
 	q := gocb.NewN1qlQuery(queryStr)
 	rows, err := repo.bucket.ExecuteN1qlQuery(q, nil)
+
 	if err != nil {
 		return nil, err
 	}
+
 	users := []*pb.User{}
+
 	for rows.Next(&user) {
 		users = append(users, user)
 	}
+
 	if len(users) <= 0 {
 		return nil, errors.New("Not found user")
 	} else {
 		return users[0], nil
 	}
+
 	return user, nil
 }
 
