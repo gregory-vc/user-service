@@ -1,26 +1,27 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gopkg.in/couchbase/gocb.v1"
 )
 
-func CreateConnection() (*gorm.DB, error) {
+func CreateGlobalBucket() (*gocb.Bucket, error) {
 
-	// Get database details from environment variables
-	host := os.Getenv("DB_HOST")
-	user := os.Getenv("DB_USER")
-	DBName := os.Getenv("DB_NAME")
-	password := os.Getenv("DB_PASSWORD")
+	couchbaseUri := os.Getenv("COUCHBASE")
+	couchbaseBucket := os.Getenv("COUCHBASE_BUCKET")
+	couchbaseUser := os.Getenv("COUCHBASE_USER")
+	couchbasePassword := os.Getenv("COUCHBASE_PASSWORD")
 
-	return gorm.Open(
-		"postgres",
-		fmt.Sprintf(
-			"host=%s user=%s dbname=%s sslmode=disable password=%s",
-			host, user, DBName, password,
-		),
-	)
+	cluster, err := gocb.Connect(couchbaseUri)
+	if err != nil {
+		return &gocb.Bucket{}, err
+	}
+
+	cluster.Authenticate(gocb.PasswordAuthenticator{
+		Username: couchbaseUser,
+		Password: couchbasePassword,
+	})
+
+	return cluster.OpenBucket(couchbaseBucket, "")
 }
