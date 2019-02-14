@@ -37,7 +37,7 @@ func (srv *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Respons
 }
 
 func (srv *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
-	log.Println("Logging in with:", req.Email, req.Password)
+	log.Println("Logging in with:", req.Email, req.PasswordHash)
 	fmt.Println(req)
 	user, err := srv.repo.GetByEmail(req.Email)
 	log.Println(user)
@@ -47,7 +47,7 @@ func (srv *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error
 
 	// Compares our given password against the hashed password
 	// stored in the database
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.PasswordHash)); err != nil {
 		return err
 	}
 
@@ -62,11 +62,11 @@ func (srv *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error
 func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
 	fmt.Println(req)
 	// Generates a hashed version of our password
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.PasswordHash), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	req.Password = string(hashedPass)
+	req.PasswordHash = string(hashedPass)
 	if err := srv.repo.Create(req); err != nil {
 		return err
 	}
