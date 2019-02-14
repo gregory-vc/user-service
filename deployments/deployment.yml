@@ -24,7 +24,7 @@ spec:
           ]
           env:
           - name: COUCHBASE
-            value: "couchbase://cb-example:8091"
+            value: "couchbase://cb-example"
           - name: COUCHBASE_BUCKET
             value: "test"
           - name: COUCHBASE_USER
@@ -38,7 +38,7 @@ spec:
           - name: NATS_STREAM
             value: "stan"
           - name: UPDATED_AT
-            value: "Чт фев 14 14:10:20 MSK 2019"
+            value: "Чт фев 14 14:11:52 MSK 2019"
           ports:
           - containerPort: 8080
             name: user-port
