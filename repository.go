@@ -66,6 +66,9 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	params["email"] = email
 	params["type"] = "user"
 
+	fmt.Println(queryStr)
+	fmt.Println(params)
+
 	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
 	if err != nil {
@@ -74,8 +77,10 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 
 	users := []pb.User{}
 
-	for rows.Next(&user) {
-		fmt.Println(3, user)
+	var row interface{}
+
+	for rows.Next(&row) {
+		fmt.Println(3, row)
 		users = append(users, user)
 	}
 
