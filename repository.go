@@ -57,7 +57,7 @@ func (repo *UserRepository) Create(user *pb.User) error {
 	if err != nil {
 		return err
 	}
-	userKey := fmt.Sprintf("user_%s", user.Email)
+	userKey := fmt.Sprintf("user_%d", initialValue)
 	user.Id = initialValue
 	user.Type = "user"
 	_, err = repo.bucket.Insert(userKey, user, 0)
