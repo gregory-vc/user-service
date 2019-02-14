@@ -59,28 +59,33 @@ func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, erro
 }
 
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
-	user := &pb.User{}
-	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE email ='%s' and type = 'user'", couchbaseBucket, email)
-	q := gocb.NewN1qlQuery(queryStr)
-	rows, err := repo.bucket.ExecuteN1qlQuery(q, nil)
+	user := pb.User{}
+	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
+
+	params := make(map[string]interface{})
+	params["email"] = email
+	params["type"] = "user"
+
+	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
 	if err != nil {
 		return nil, err
 	}
 
-	users := []*pb.User{}
+	users := []pb.User{}
 
 	for rows.Next(&user) {
+		fmt.Println(3, user)
 		users = append(users, user)
 	}
 
 	if len(users) <= 0 {
 		return nil, errors.New("Not found user")
 	} else {
-		return users[0], nil
+		return nil, nil
 	}
 
-	return user, nil
+	return nil, nil
 }
 
 func (repo *UserRepository) Create(user *pb.User) error {
