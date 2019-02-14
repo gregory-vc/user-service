@@ -37,6 +37,8 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 		users = append(users, user)
 	}
 
+	users = append(users, user)
+
 	return users, nil
 }
 
