@@ -81,10 +81,10 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	if len(users) <= 0 {
 		return nil, errors.New("Not found user")
 	} else {
-		return nil, nil
+		return users[0], nil
 	}
 
-	return nil, nil
+	return user, nil
 }
 
 func (repo *UserRepository) Create(user *pb.User) error {
