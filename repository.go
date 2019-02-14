@@ -23,7 +23,7 @@ type UserRepository struct {
 func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 	user := &pb.User{}
 	var users []*pb.User
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` WHERE and type=$type", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` WHERE type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
 	params["type"] = "user"
