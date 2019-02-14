@@ -23,13 +23,13 @@ spec:
             "--server_address=:8080"
           ]
           env:
-          - name: COUCHBASE:
+          - name: COUCHBASE
             value: "couchbase://cb-example:8091"
-          - name: COUCHBASE_BUCKET:
+          - name: COUCHBASE_BUCKET
             value: "test"
-          - name: COUCHBASE_USER:
+          - name: COUCHBASE_USER
             value: "Administrator"
-          - name: COUCHBASE_PASSWORD:
+          - name: COUCHBASE_PASSWORD
             value: "password"
           - name: MICRO_BROKER
             value: "nats"
@@ -38,7 +38,7 @@ spec:
           - name: NATS_STREAM
             value: "stan"
           - name: UPDATED_AT
-            value: "Чт фев 14 14:09:04 MSK 2019"
+            value: "Чт фев 14 14:10:20 MSK 2019"
           ports:
           - containerPort: 8080
             name: user-port
