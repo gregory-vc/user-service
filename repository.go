@@ -23,10 +23,12 @@ type UserRepository struct {
 func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 	user := &pb.User{}
 	var users []*pb.User
-	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE and type = 'user'", couchbaseBucket)
-	q := gocb.NewN1qlQuery(queryStr)
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` WHERE and type=$type", couchbaseBucket)
 
-	rows, err := repo.bucket.ExecuteN1qlQuery(q, nil)
+	params := make(map[string]interface{})
+	params["type"] = "user"
+
+	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
 	if err != nil {
 		return nil, err
@@ -89,9 +91,7 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 
 func (repo *UserRepository) Create(user *pb.User) error {
 
-	tt, err := repo.GetByEmail(user.Email)
-
-	fmt.Println(tt)
+	_, err := repo.GetByEmail(user.Email)
 
 	if err == nil {
 		return errors.New("User already exist")
