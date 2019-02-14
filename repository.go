@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"gopkg.in/couchbase/gocb.v1"
 )
@@ -51,8 +53,10 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 }
 
 func (repo *UserRepository) Create(user *pb.User) error {
-	// if err := repo.db.Create(user).Error; err != nil {
-	// 	return err
-	// }
+	userKey := fmt.Sprintf("user::%s", user.Email)
+	_, err := repo.bucket.Insert(userKey, user, 0)
+	if err != nil {
+		return err
+	}
 	return nil
 }
