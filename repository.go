@@ -21,10 +21,17 @@ type UserRepository struct {
 }
 
 func (repo *UserRepository) GetAll() ([]*pb.User, error) {
+	user := &pb.User{}
 	var users []*pb.User
-	// if err := repo.db.Find(&users).Error; err != nil {
-	// 	return nil, err
-	// }
+	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE and type = 'user'", couchbaseBucket)
+	q := gocb.NewN1qlQuery(queryStr)
+	rows, err := repo.bucket.ExecuteN1qlQuery(q, nil)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next(&user) {
+		users = append(users, user)
+	}
 	return users, nil
 }
 
@@ -46,7 +53,7 @@ func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, erro
 
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	user := &pb.User{}
-	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE email ='%s'", couchbaseBucket, email)
+	queryStr := fmt.Sprintf("SELECT * FROM `%s` WHERE email ='%s' and type = 'user'", couchbaseBucket, email)
 	q := gocb.NewN1qlQuery(queryStr)
 	rows, err := repo.bucket.ExecuteN1qlQuery(q, nil)
 	if err != nil {
@@ -77,15 +84,20 @@ func (repo *UserRepository) Create(user *pb.User) error {
 	}
 
 	initialValue, _, err := repo.bucket.Counter("user_type", 1, 1, 0)
+
 	if err != nil {
 		return err
 	}
+
 	userKey := fmt.Sprintf("user_%d", initialValue)
 	user.Id = initialValue
 	user.Type = "user"
+
 	_, err = repo.bucket.Insert(userKey, user, 0)
+
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
