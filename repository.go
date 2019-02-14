@@ -66,9 +66,7 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 
 func (repo *UserRepository) Create(user *pb.User) error {
 
-	user, err := repo.GetByEmail(user.Email)
-
-	fmt.Println(user)
+	_, err := repo.GetByEmail(user.Email)
 
 	if err == nil {
 		return errors.New("User already exist")
