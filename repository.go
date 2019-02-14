@@ -35,10 +35,8 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 	}
 
 	for rows.Next(&user) {
-		fmt.Println("1", user)
 		users = append(users, user)
 		user = &pb.User{}
-		fmt.Println(users)
 	}
 
 	return users, nil
