@@ -54,6 +54,8 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 
 func (repo *UserRepository) Create(user *pb.User) error {
 	userKey := fmt.Sprintf("user::%s", user.Email)
+	user.Id = 1
+	user.Type = "user"
 	_, err := repo.bucket.Insert(userKey, user, 0)
 	if err != nil {
 		return err
