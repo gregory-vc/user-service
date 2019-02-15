@@ -55,7 +55,7 @@ func (srv *service) ListUsers(ctx context.Context, req *pb.ListUsersRequest, res
 }
 
 func (srv *service) ListUsersByIDs(ctx context.Context, req *pb.ListUsersByIDsRequest, res *pb.ListUsersResponse) error {
-	users, err := srv.repo.GetByIDs()
+	users, err := srv.repo.GetByIDs(req.Ids)
 	if err != nil {
 		log.Println(err)
 	}

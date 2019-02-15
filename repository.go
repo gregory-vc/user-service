@@ -10,6 +10,7 @@ import (
 
 type Repository interface {
 	GetAll() ([]*pb.User, error)
+	GetByIDs(ids []uint64) ([]*pb.User, error)
 	Get(id uint64) (*pb.User, error)
 	Create(user *pb.User) error
 	GetByEmailAndPassword(user *pb.User) (*pb.User, error)
@@ -27,6 +28,28 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 
 	params := make(map[string]interface{})
 	params["type"] = "user"
+
+	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next(&user) {
+		users = append(users, user)
+		user = &pb.User{}
+	}
+
+	return users, nil
+}
+
+func (repo *UserRepository) GetByIDs(ids []uint64) ([]*pb.User, error) {
+	user := &pb.User{}
+	var users []*pb.User
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` USE KEYS $ids", couchbaseBucket)
+
+	params := make(map[string]interface{})
+	params["ids"] = ids
 
 	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
