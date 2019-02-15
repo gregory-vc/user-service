@@ -21,6 +21,7 @@ func (srv *service) GetUser(ctx context.Context, req *pb.ID, res *pb.User) error
 	user, err := srv.repo.Get(req.Id)
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 	*res = *user
 	return nil
@@ -30,6 +31,7 @@ func (srv *service) UpdateUser(ctx context.Context, req *pb.User, res *pb.User) 
 	user, err := srv.repo.Update(req)
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 	*res = *user
 	return nil
@@ -39,6 +41,7 @@ func (srv *service) DeleteUser(ctx context.Context, req *pb.ID, res *pb.User) er
 	user, err := srv.repo.Delete(req.Id)
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 	*res = *user
 	return nil
@@ -48,6 +51,7 @@ func (srv *service) ListUsers(ctx context.Context, req *pb.ListUsersRequest, res
 	users, err := srv.repo.GetAll()
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 	res.Users = users
 	res.Count = uint32(len(users))
@@ -58,6 +62,7 @@ func (srv *service) ListUsersByIDs(ctx context.Context, req *pb.ListUsersByIDsRe
 	users, err := srv.repo.GetByIDs(req.Ids)
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 	res.Users = users
 	res.Count = uint32(len(users))
@@ -69,15 +74,18 @@ func (srv *service) AuthUser(ctx context.Context, req *pb.AuthUserRequest, res *
 	user, err := srv.repo.GetByEmail(req.Email)
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
 		log.Println(err)
+		return nil
 	}
 
 	token, err := srv.tokenService.Encode(user)
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 
 	res.Jwt = token
@@ -89,16 +97,19 @@ func (srv *service) CreateUser(ctx context.Context, req *pb.User, res *pb.User) 
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 	req.Password = string(hashedPass)
 	if err := srv.repo.Create(req); err != nil {
 		log.Println(err)
+		return nil
 	}
 
 	*res = *req
 
 	if err := srv.publishEvent(req); err != nil {
 		log.Println(err)
+		return nil
 	}
 	return nil
 }
@@ -108,6 +119,7 @@ func (srv *service) publishEvent(user *pb.User) error {
 	body, err := json.Marshal(user)
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 
 	// Create a broker message
@@ -133,10 +145,12 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 
 	if err != nil {
 		log.Println(err)
+		return nil
 	}
 
 	if claims.User.Id == 0 {
 		log.Println(errors.New("invalid user"))
+		return nil
 	}
 
 	res.Valid = true
