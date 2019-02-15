@@ -170,7 +170,7 @@ func (repo *UserRepository) Get(id uint64) (*pb.User, error) {
 
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	user := &pb.User{}
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service, `password` FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
 	params["email"] = email
