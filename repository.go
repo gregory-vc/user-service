@@ -49,7 +49,7 @@ func (repo *UserRepository) GetByIDs(ids []uint64) ([]*pb.User, error) {
 	user := &pb.User{}
 	var users []*pb.User
 	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` USE KEYS $ids", couchbaseBucket)
-	var idsString []string
+	idsString := make([]string, len(ids))
 
 	for i, j := range ids {
 		idsString[i] = fmt.Sprintf(primaryKey, j)
