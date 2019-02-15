@@ -5,10 +5,13 @@ package user;
 import "google/protobuf/timestamp.proto";
 
 service UserService {
-    rpc Create(User) returns (Response) {}
-    rpc Get(User) returns (Response) {}
-    rpc GetAll(Request) returns (Response) {}
-    rpc Auth(User) returns (Token) {}
+    rpc CreateUser(User) returns (User) {}
+    rpc GetUser(ID) returns (User) {}
+    rpc UpdateUser(User) returns (User) {}
+    rpc DeleteUser(ID) returns (User) {}
+    rpc AuthUser(AuthUserRequest) returns (AuthUserResponse) {}
+    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+    rpc ListUsersByID(ListUsersByIDRequest) returns (ListUsersResponse) {}
     rpc ValidateToken(Token) returns (Token) {}
 }
 
@@ -24,23 +27,33 @@ message User {
     string service = 9;
 }
 
-message Request {
-    repeated uint64 ids = 1;
+message ID {
+    uint64 id = 1;
 }
 
-message Response {
-    User user = 1;
-    repeated User users = 2;
-    repeated Error errors = 3;
+message ListUsersRequest {
+    uint32 role = 1;
+}
+
+message ListUsersByIDRequest {
+    repeated uint64 ids = 1;
+}
+ 
+message ListUsersResponse {
+    repeated User users = 1;
+    uint32 count = 2;
+}
+
+message AuthUserRequest {
+    string email = 1;
+    string password = 2;
+}
+ 
+message AuthUserResponse {
+    string jwt = 1;
 }
 
 message Token {
     string token = 1;
     bool valid = 2;
-    repeated Error errors = 3;
-}
-
-message Error {
-    int32 code = 1;
-    string description = 2;
 }
