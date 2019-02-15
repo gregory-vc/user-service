@@ -18,7 +18,7 @@ type Repository interface {
 	GetByIDs(ids []uint64) ([]*pb.User, error)
 	Get(id uint64) (*pb.User, error)
 	Delete(id uint64) (*pb.User, error)
-	Create(user *pb.User) error
+	Create(user *pb.User) (*pb.User, error)
 	Update(userUpdate *pb.User) (*pb.User, error)
 	GetByEmail(email string) (*pb.User, error)
 }
@@ -205,39 +205,60 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	return users[0], nil
 }
 
-func (repo *UserRepository) Create(user *pb.User) error {
+func (repo *UserRepository) Create(userCreate *pb.User) (*pb.User, error) {
 
-	_, err := repo.GetByEmail(user.Email)
+	_, err := repo.GetByEmail(userCreate.Email)
 
 	if err == nil {
-		return errors.New("User already exist")
+		return nil, errors.New("User already exist")
 	}
 
 	if err != nil && err.Error() != "Not found user" {
-		return err
+		return nil, err
 	}
 
 	initialValue, _, err := repo.bucket.Counter("user_type", 1, 1, 0)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	userKey := fmt.Sprintf(primaryKey, initialValue)
-	user.Id = initialValue
-	user.Type = table
+	userCreate.Id = initialValue
+	userCreate.Type = table
 	t, err := ptypes.TimestampProto(time.Now())
 	if err != nil {
-		return err
+		return nil, err
 	}
-	user.CreatedAt = t
-	user.UpdatedAt = t
+	userCreate.CreatedAt = t
+	userCreate.UpdatedAt = t
 
-	_, err = repo.bucket.Insert(userKey, user, 0)
+	user := &pb.User{}
+	var users []*pb.User
+
+	queryStr := fmt.Sprintf("INSERT INTO `%s` (KEY, VALUE) "+
+		"VALUES ($key, $user) "+
+		"RETURNING id, first_name, last_name, email, service", couchbaseBucket)
+
+	params := make(map[string]interface{})
+
+	params["key"] = userKey
+	params["user"] = userCreate
+
+	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	for rows.Next(&user) {
+		users = append(users, user)
+		user = &pb.User{}
+	}
+
+	if len(users) <= 0 {
+		return nil, errors.New("Not found user")
+	}
+
+	return users[0], nil
 }

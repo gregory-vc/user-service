@@ -100,12 +100,14 @@ func (srv *service) CreateUser(ctx context.Context, req *pb.User, res *pb.User) 
 		return nil
 	}
 	req.Password = string(hashedPass)
-	if err := srv.repo.Create(req); err != nil {
+
+	user, err := srv.repo.Create(req)
+	if err != nil {
 		log.Println(err)
 		return nil
 	}
 
-	*res = *req
+	*res = *user
 
 	if err := srv.publishEvent(req); err != nil {
 		log.Println(err)
