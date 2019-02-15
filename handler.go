@@ -145,11 +145,13 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 
 	if err != nil {
 		log.Println(err)
+		res.Valid = false
 		return nil
 	}
 
 	if claims.User.Id == 0 {
 		log.Println(errors.New("invalid user"))
+		res.Valid = false
 		return nil
 	}
 
