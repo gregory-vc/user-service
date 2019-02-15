@@ -36,7 +36,7 @@ func (srv *service) UpdateUser(ctx context.Context, req *pb.User, res *pb.User) 
 }
 
 func (srv *service) DeleteUser(ctx context.Context, req *pb.ID, res *pb.ID) error {
-	user, err := srv.repo.Get(req.Id)
+	_, err := srv.repo.Get(req.Id)
 	if err != nil {
 		log.Println(err)
 	}
