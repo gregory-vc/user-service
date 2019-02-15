@@ -9,12 +9,14 @@ import (
 )
 
 const primaryKey = "user_%d"
+const table = "user"
 
 type Repository interface {
 	GetAll() ([]*pb.User, error)
 	GetByIDs(ids []uint64) ([]*pb.User, error)
 	Get(id uint64) (*pb.User, error)
 	Create(user *pb.User) error
+	Update(userUpdate *pb.User) (*pb.User, error)
 	GetByEmailAndPassword(user *pb.User) (*pb.User, error)
 	GetByEmail(email string) (*pb.User, error)
 }
@@ -23,13 +25,48 @@ type UserRepository struct {
 	bucket *gocb.Bucket
 }
 
+func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
+	user := &pb.User{}
+	var users []*pb.User
+	queryStr := fmt.Sprintf("UPDATE `%s` SET "+
+		"first_name=$first_name"+
+		"last_name=$last_name"+
+		"email=$email"+
+		" WHERE type=$type and id=$id RETURNING id, first_name, last_name, email, service", couchbaseBucket)
+
+	params := make(map[string]interface{})
+
+	params["first_name"] = userUpdate.FirstName
+	params["last_name"] = userUpdate.LastName
+	params["email"] = userUpdate.Email
+	params["type"] = table
+	params["id"] = userUpdate.Id
+
+	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next(&user) {
+		users = append(users, user)
+		user = &pb.User{}
+	}
+
+	if len(users) <= 0 {
+		return nil, errors.New("Not found user")
+	}
+
+	return users[0], nil
+}
+
 func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 	user := &pb.User{}
 	var users []*pb.User
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` WHERE type=$type", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` WHERE type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
-	params["type"] = "user"
+	params["type"] = table
 
 	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
@@ -48,7 +85,7 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 func (repo *UserRepository) GetByIDs(ids []uint64) ([]*pb.User, error) {
 	user := &pb.User{}
 	var users []*pb.User
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` USE KEYS $ids", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` USE KEYS $ids", couchbaseBucket)
 	idsString := make([]string, len(ids))
 
 	for i, j := range ids {
@@ -110,11 +147,11 @@ func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, erro
 
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	user := &pb.User{}
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
 	params["email"] = email
-	params["type"] = "user"
+	params["type"] = table
 
 	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
@@ -155,7 +192,7 @@ func (repo *UserRepository) Create(user *pb.User) error {
 
 	userKey := fmt.Sprintf(primaryKey, initialValue)
 	user.Id = initialValue
-	user.Type = "user"
+	user.Type = table
 
 	_, err = repo.bucket.Insert(userKey, user, 0)
 

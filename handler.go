@@ -27,11 +27,11 @@ func (srv *service) GetUser(ctx context.Context, req *pb.ID, res *pb.User) error
 }
 
 func (srv *service) UpdateUser(ctx context.Context, req *pb.User, res *pb.User) error {
-	user, err := srv.repo.Get(req.Id)
+	user, err := srv.repo.Update(req)
 	if err != nil {
 		log.Println(err)
 	}
-	res = user
+	*res = *user
 	return nil
 }
 
