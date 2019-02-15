@@ -1,7 +1,6 @@
 module github.com/gregory-vc/user-service
 
 require (
-	github.com/EwanValentine/shippy v0.0.0-20181206231135-cf1b235f5c09 // indirect
 	github.com/couchbase/go-couchbase v0.0.0-20190117181324-d904413d884d // indirect
 	github.com/couchbase/gomemcached v0.0.0-20190211162328-9ad9af7263ec // indirect
 	github.com/couchbase/goutils v0.0.0-20180530154633-e865a1461c8a // indirect
