@@ -76,7 +76,7 @@ func (repo *UserRepository) Get(id uint64) (*pb.User, error) {
 
 	user := &pb.User{}
 	var users []*pb.User
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` USE KEYS $ids", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` USE KEYS $ids", couchbaseBucket)
 	idsString := make([]string, 1)
 	idsString[0] = fmt.Sprintf(primaryKey, id)
 
