@@ -11,7 +11,7 @@ service UserService {
     rpc DeleteUser(ID) returns (ID) {}
     rpc AuthUser(AuthUserRequest) returns (AuthUserResponse) {}
     rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
-    rpc ListUsersByID(ListUsersByIDRequest) returns (ListUsersResponse) {}
+    rpc ListUsersByIDs(ListUsersByIDsRequest) returns (ListUsersResponse) {}
     rpc ValidateToken(Token) returns (Token) {}
 }
 
@@ -35,7 +35,7 @@ message ListUsersRequest {
     uint32 role = 1;
 }
 
-message ListUsersByIDRequest {
+message ListUsersByIDsRequest {
     repeated uint64 ids = 1;
 }
  

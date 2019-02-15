@@ -54,8 +54,8 @@ func (srv *service) ListUsers(ctx context.Context, req *pb.ListUsersRequest, res
 	return nil
 }
 
-func (srv *service) ListUsersByID(ctx context.Context, req *pb.ListUsersByIDRequest, res *pb.ListUsersResponse) error {
-	users, err := srv.repo.GetAll()
+func (srv *service) ListUsersByIDs(ctx context.Context, req *pb.ListUsersByIDsRequest, res *pb.ListUsersResponse) error {
+	users, err := srv.repo.GetByIDs()
 	if err != nil {
 		log.Println(err)
 	}
