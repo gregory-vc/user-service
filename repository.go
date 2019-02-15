@@ -8,6 +8,8 @@ import (
 	"gopkg.in/couchbase/gocb.v1"
 )
 
+const primaryKey = "user_%d"
+
 type Repository interface {
 	GetAll() ([]*pb.User, error)
 	GetByIDs(ids []uint64) ([]*pb.User, error)
@@ -47,9 +49,14 @@ func (repo *UserRepository) GetByIDs(ids []uint64) ([]*pb.User, error) {
 	user := &pb.User{}
 	var users []*pb.User
 	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` USE KEYS $ids", couchbaseBucket)
+	var idsString []string
+
+	for i, j := range ids {
+		idsString[i] = fmt.Sprintf(primaryKey, j)
+	}
 
 	params := make(map[string]interface{})
-	params["ids"] = ids
+	params["ids"] = idsString
 
 	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
@@ -128,7 +135,7 @@ func (repo *UserRepository) Create(user *pb.User) error {
 		return err
 	}
 
-	userKey := fmt.Sprintf("user_%d", initialValue)
+	userKey := fmt.Sprintf(primaryKey, initialValue)
 	user.Id = initialValue
 	user.Type = "user"
 
