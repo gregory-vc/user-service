@@ -64,7 +64,7 @@ func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
 	queryStr := fmt.Sprintf("UPDATE `%s` SET "+
 		"first_name=$first_name, "+
 		"last_name=$last_name, "+
-		"email=$email "+
+		"email=$email, "+
 		"updated_at=$updated_at "+
 		"WHERE type=$type and id=$id RETURNING id, first_name, last_name, email, service", couchbaseBucket)
 
