@@ -29,10 +29,10 @@ func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
 	user := &pb.User{}
 	var users []*pb.User
 	queryStr := fmt.Sprintf("UPDATE `%s` SET "+
-		"first_name=$first_name"+
-		"last_name=$last_name"+
-		"email=$email"+
-		" WHERE type=$type and id=$id RETURNING id, first_name, last_name, email, service", couchbaseBucket)
+		"first_name=$first_name, "+
+		"last_name=$last_name, "+
+		"email=$email "+
+		"WHERE type=$type and id=$id RETURNING id, first_name, last_name, email, service", couchbaseBucket)
 
 	params := make(map[string]interface{})
 
