@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"time"
 
+	"github.com/golang/protobuf/ptypes"
 	pb "github.com/gregory-vc/user-service/proto/user"
 	"gopkg.in/couchbase/gocb.v1"
 )
@@ -58,19 +60,27 @@ func (repo *UserRepository) Delete(id uint64) (*pb.User, error) {
 func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
 	user := &pb.User{}
 	var users []*pb.User
+
 	queryStr := fmt.Sprintf("UPDATE `%s` SET "+
 		"first_name=$first_name, "+
 		"last_name=$last_name, "+
 		"email=$email "+
+		"updated_at=$updated_at "+
 		"WHERE type=$type and id=$id RETURNING id, first_name, last_name, email, service", couchbaseBucket)
 
 	params := make(map[string]interface{})
+
+	t, err := ptypes.TimestampProto(time.Now())
+	if err != nil {
+		return nil, err
+	}
 
 	params["first_name"] = userUpdate.FirstName
 	params["last_name"] = userUpdate.LastName
 	params["email"] = userUpdate.Email
 	params["type"] = table
 	params["id"] = userUpdate.Id
+	params["updated_at"] = t
 
 	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
@@ -216,6 +226,12 @@ func (repo *UserRepository) Create(user *pb.User) error {
 	userKey := fmt.Sprintf(primaryKey, initialValue)
 	user.Id = initialValue
 	user.Type = table
+	t, err := ptypes.TimestampProto(time.Now())
+	if err != nil {
+		return err
+	}
+	user.CreatedAt = t
+	user.UpdatedAt = t
 
 	_, err = repo.bucket.Insert(userKey, user, 0)
 

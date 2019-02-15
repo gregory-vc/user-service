@@ -38,7 +38,7 @@ spec:
           - name: NATS_STREAM
             value: "stan"
           - name: UPDATED_AT
-            value: "Пт фев 15 18:01:29 MSK 2019"
+            value: "Пт фев 15 18:11:54 MSK 2019"
           ports:
           - containerPort: 8080
             name: user-port
