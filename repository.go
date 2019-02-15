@@ -74,10 +74,10 @@ func (repo *UserRepository) GetByIDs(ids []uint64) ([]*pb.User, error) {
 
 func (repo *UserRepository) Get(id uint64) (*pb.User, error) {
 	var user *pb.User
-	// user.Id = id
-	// if err := repo.db.First(&user).Error; err != nil {
-	// 	return nil, err
-	// }
+
+	userKey := fmt.Sprintf(primaryKey, id)
+	repo.bucket.Get(userKey, &user)
+
 	return user, nil
 }
 
