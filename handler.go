@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 
 	pb "github.com/gregory-vc/user-service/proto/user"
@@ -18,63 +17,86 @@ type service struct {
 	PubSub       broker.Broker
 }
 
-func (srv *service) Get(ctx context.Context, req *pb.User, res *pb.Response) error {
+func (srv *service) GetUser(ctx context.Context, req *pb.ID, res *pb.User) error {
 	user, err := srv.repo.Get(req.Id)
 	if err != nil {
-		return err
+		log.Println(err)
 	}
-	res.User = user
+	res = user
 	return nil
 }
 
-func (srv *service) GetAll(ctx context.Context, req *pb.Request, res *pb.Response) error {
+func (srv *service) UpdateUser(ctx context.Context, req *pb.User, res *pb.User) error {
+	user, err := srv.repo.Get(req.Id)
+	if err != nil {
+		log.Println(err)
+	}
+	res = user
+	return nil
+}
+
+func (srv *service) DeleteUser(ctx context.Context, req *pb.ID, res *pb.ID) error {
+	user, err := srv.repo.Get(req.Id)
+	if err != nil {
+		log.Println(err)
+	}
+	return nil
+}
+
+func (srv *service) ListUsers(ctx context.Context, req *pb.ListUsersRequest, res *pb.ListUsersResponse) error {
 	users, err := srv.repo.GetAll()
 	if err != nil {
-		return err
+		log.Println(err)
 	}
 	res.Users = users
+	res.Count = uint32(len(users))
 	return nil
 }
 
-func (srv *service) Auth(ctx context.Context, req *pb.User, res *pb.Token) error {
-	log.Println("Logging in with:", req.Email, req.Password)
-	fmt.Println(req)
-	user, err := srv.repo.GetByEmail(req.Email)
-	log.Println(user)
+func (srv *service) ListUsersByID(ctx context.Context, req *pb.ListUsersByIDRequest, res *pb.ListUsersResponse) error {
+	users, err := srv.repo.GetAll()
 	if err != nil {
-		return err
+		log.Println(err)
+	}
+	res.Users = users
+	res.Count = uint32(len(users))
+	return nil
+}
+
+func (srv *service) AuthUser(ctx context.Context, req *pb.AuthUserRequest, res *pb.AuthUserResponse) error {
+	log.Println("Logging in with:", req.Email, req.Password)
+	user, err := srv.repo.GetByEmail(req.Email)
+	if err != nil {
+		log.Println(err)
 	}
 
-	// Compares our given password against the hashed password
-	// stored in the database
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
-		return err
+		log.Println(err)
 	}
 
 	token, err := srv.tokenService.Encode(user)
 	if err != nil {
-		return err
+		log.Println(err)
 	}
 
-	res.Token = token
+	res.Jwt = token
 	return nil
 }
 
-func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
-	fmt.Println(req)
-	// Generates a hashed version of our password
+func (srv *service) CreateUser(ctx context.Context, req *pb.User, res *pb.User) error {
+
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return err
+		log.Println(err)
 	}
 	req.Password = string(hashedPass)
 	if err := srv.repo.Create(req); err != nil {
-		return err
+		log.Println(err)
 	}
-	res.User = req
+	res = req
 
 	if err := srv.publishEvent(req); err != nil {
-		return err
+		log.Println(err)
 	}
 	return nil
 }
@@ -83,7 +105,7 @@ func (srv *service) publishEvent(user *pb.User) error {
 	// Marshal to JSON string
 	body, err := json.Marshal(user)
 	if err != nil {
-		return err
+		log.Println(err)
 	}
 
 	// Create a broker message
@@ -108,11 +130,11 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 	claims, err := srv.tokenService.Decode(req.Token)
 
 	if err != nil {
-		return err
+		log.Println(err)
 	}
 
 	if claims.User.Id == 0 {
-		return errors.New("invalid user")
+		log.Println(errors.New("invalid user"))
 	}
 
 	res.Valid = true
