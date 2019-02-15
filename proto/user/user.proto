@@ -54,6 +54,6 @@ message AuthUserResponse {
 }
 
 message Token {
-    string token = 1;
+    string jwt = 1;
     bool valid = 2;
 }
