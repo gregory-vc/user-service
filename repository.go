@@ -15,6 +15,7 @@ type Repository interface {
 	GetAll() ([]*pb.User, error)
 	GetByIDs(ids []uint64) ([]*pb.User, error)
 	Get(id uint64) (*pb.User, error)
+	Delete(id uint64) (*pb.User, error)
 	Create(user *pb.User) error
 	Update(userUpdate *pb.User) (*pb.User, error)
 	GetByEmailAndPassword(user *pb.User) (*pb.User, error)
@@ -23,6 +24,36 @@ type Repository interface {
 
 type UserRepository struct {
 	bucket *gocb.Bucket
+}
+
+func (repo *UserRepository) Delete(id uint64) (*pb.User, error) {
+	user := &pb.User{}
+	var users []*pb.User
+	queryStr := fmt.Sprintf("DELETE FROM `%s` "+
+		"USE KEYS $ids RETURNING id, first_name, last_name, email, service", couchbaseBucket)
+
+	idsString := make([]string, 1)
+	idsString[0] = fmt.Sprintf(primaryKey, id)
+
+	params := make(map[string]interface{})
+	params["ids"] = idsString
+
+	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next(&user) {
+		users = append(users, user)
+		user = &pb.User{}
+	}
+
+	if len(users) <= 0 {
+		return nil, errors.New("Not found user")
+	}
+
+	return users[0], nil
 }
 
 func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {

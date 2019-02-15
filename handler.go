@@ -35,11 +35,12 @@ func (srv *service) UpdateUser(ctx context.Context, req *pb.User, res *pb.User) 
 	return nil
 }
 
-func (srv *service) DeleteUser(ctx context.Context, req *pb.ID, res *pb.ID) error {
-	_, err := srv.repo.Get(req.Id)
+func (srv *service) DeleteUser(ctx context.Context, req *pb.ID, res *pb.User) error {
+	user, err := srv.repo.Delete(req.Id)
 	if err != nil {
 		log.Println(err)
 	}
+	*res = *user
 	return nil
 }
 
