@@ -141,7 +141,7 @@ func (srv *service) publishEvent(user *pb.User) error {
 func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.Token) error {
 
 	// Decode token
-	claims, err := srv.tokenService.Decode(req.Token)
+	claims, err := srv.tokenService.Decode(req.Jwt)
 
 	if err != nil {
 		log.Println(err)
