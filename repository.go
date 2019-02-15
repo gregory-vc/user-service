@@ -18,7 +18,6 @@ type Repository interface {
 	Delete(id uint64) (*pb.User, error)
 	Create(user *pb.User) error
 	Update(userUpdate *pb.User) (*pb.User, error)
-	GetByEmailAndPassword(user *pb.User) (*pb.User, error)
 	GetByEmail(email string) (*pb.User, error)
 }
 
@@ -167,13 +166,6 @@ func (repo *UserRepository) Get(id uint64) (*pb.User, error) {
 	}
 
 	return users[0], nil
-}
-
-func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, error) {
-	// if err := repo.db.First(&user).Error; err != nil {
-	// 	return nil, err
-	// }
-	return user, nil
 }
 
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
