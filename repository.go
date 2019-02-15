@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/golang/protobuf/ptypes"
 	pb "github.com/gregory-vc/user-service/proto/user"
@@ -70,17 +69,12 @@ func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
 
 	params := make(map[string]interface{})
 
-	t, err := ptypes.TimestampProto(time.Now())
-	if err != nil {
-		return nil, err
-	}
-
 	params["first_name"] = userUpdate.FirstName
 	params["last_name"] = userUpdate.LastName
 	params["email"] = userUpdate.Email
 	params["type"] = table
 	params["id"] = userUpdate.Id
-	params["updated_at"] = t
+	params["updated_at"] = ptypes.TimestampNow()
 
 	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
@@ -226,12 +220,8 @@ func (repo *UserRepository) Create(userCreate *pb.User) (*pb.User, error) {
 	userKey := fmt.Sprintf(primaryKey, initialValue)
 	userCreate.Id = initialValue
 	userCreate.Type = table
-	t, err := ptypes.TimestampProto(time.Now())
-	if err != nil {
-		return nil, err
-	}
-	userCreate.CreatedAt = t
-	userCreate.UpdatedAt = t
+	userCreate.CreatedAt = ptypes.TimestampNow()
+	userCreate.UpdatedAt = ptypes.TimestampNow()
 
 	user := &pb.User{}
 	var users []*pb.User
