@@ -73,12 +73,32 @@ func (repo *UserRepository) GetByIDs(ids []uint64) ([]*pb.User, error) {
 }
 
 func (repo *UserRepository) Get(id uint64) (*pb.User, error) {
-	var user *pb.User
 
-	userKey := fmt.Sprintf(primaryKey, id)
-	repo.bucket.Get(userKey, &user)
+	user := &pb.User{}
+	var users []*pb.User
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` USE KEYS $ids", couchbaseBucket)
+	idsString := make([]string, 1)
+	idsString[0] = fmt.Sprintf(primaryKey, id)
 
-	return user, nil
+	params := make(map[string]interface{})
+	params["ids"] = idsString
+
+	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next(&user) {
+		users = append(users, user)
+		user = &pb.User{}
+	}
+
+	if len(users) <= 0 {
+		return nil, errors.New("Not found user")
+	}
+
+	return users[0], nil
 }
 
 func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, error) {
@@ -90,7 +110,7 @@ func (repo *UserRepository) GetByEmailAndPassword(user *pb.User) (*pb.User, erro
 
 func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	user := &pb.User{}
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, `password` FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
 	params["email"] = email
@@ -110,11 +130,9 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 
 	if len(users) <= 0 {
 		return nil, errors.New("Not found user")
-	} else {
-		return users[0], nil
 	}
 
-	return user, nil
+	return users[0], nil
 }
 
 func (repo *UserRepository) Create(user *pb.User) error {
