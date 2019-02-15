@@ -94,7 +94,7 @@ func (srv *service) CreateUser(ctx context.Context, req *pb.User, res *pb.User) 
 	if err := srv.repo.Create(req); err != nil {
 		log.Println(err)
 	}
-	res = req
+	*res = *req
 
 	fmt.Println(res)
 
