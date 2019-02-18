@@ -17,7 +17,7 @@ deploy:
 	Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types:\
 	. proto/user/user.proto
 
-	easyjson -all $(GOPATH)/src/github.com/gregory-vc/user-service/proto/user/user.pb.go
+	# easyjson -all $(GOPATH)/src/github.com/gregory-vc/user-service/proto/user/user.pb.go
 
 	sed "s/{{ UPDATED_AT }}/$(shell date)/g" ./deployments/deployment.tmpl > ./deployments/deployment.yml
 	go mod vendor
