@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"gopkg.in/couchbase/gocb.v1"
@@ -29,7 +30,7 @@ func (repo *UserRepository) Delete(id uint64) (*User, error) {
 	user := &User{}
 	var users []*User
 	queryStr := fmt.Sprintf("DELETE FROM `%s` "+
-		"USE KEYS $ids RETURNING id, first_name, last_name, email, service", couchbaseBucket)
+		"USE KEYS $ids RETURNING "+strings.Join(returningColumns, ", "), couchbaseBucket)
 
 	idsString := make([]string, 1)
 	idsString[0] = fmt.Sprintf(primaryKey, id)
@@ -60,11 +61,8 @@ func (repo *UserRepository) Update(userUpdate *User) (*User, error) {
 	var users []*User
 
 	queryStr := fmt.Sprintf("UPDATE `%s` SET "+
-		"first_name=$first_name, "+
-		"last_name=$last_name, "+
-		"email=$email, "+
-		"updated_at=$updated_at "+
-		"WHERE type=$type and id=$id RETURNING id, first_name, last_name, email, service", couchbaseBucket)
+		strings.Join(updateColumns, ", ")+
+		"WHERE type=$type and id=$id RETURNING "+strings.Join(returningColumns, ", "), couchbaseBucket)
 
 	params := make(map[string]interface{})
 
@@ -96,7 +94,7 @@ func (repo *UserRepository) Update(userUpdate *User) (*User, error) {
 func (repo *UserRepository) GetAll() ([]*User, error) {
 	user := &User{}
 	var users []*User
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` WHERE type=$type", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT "+strings.Join(returningColumns, ", ")+" FROM `%s` WHERE type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
 	params["type"] = table
@@ -118,7 +116,7 @@ func (repo *UserRepository) GetAll() ([]*User, error) {
 func (repo *UserRepository) GetByIDs(ids []uint64) ([]*User, error) {
 	user := &User{}
 	var users []*User
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` USE KEYS $ids", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT "+strings.Join(returningColumns, ", ")+" FROM `%s` USE KEYS $ids", couchbaseBucket)
 	idsString := make([]string, len(ids))
 
 	for i, j := range ids {
@@ -146,7 +144,7 @@ func (repo *UserRepository) Get(id uint64) (*User, error) {
 
 	user := &User{}
 	var users []*User
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` USE KEYS $ids", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT "+strings.Join(returningColumns, ", ")+" FROM `%s` USE KEYS $ids", couchbaseBucket)
 	idsString := make([]string, 1)
 	idsString[0] = fmt.Sprintf(primaryKey, id)
 
@@ -173,7 +171,7 @@ func (repo *UserRepository) Get(id uint64) (*User, error) {
 
 func (repo *UserRepository) GetByEmail(email string) (*User, error) {
 	user := &User{}
-	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service, `password` FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
+	queryStr := fmt.Sprintf("SELECT "+strings.Join(returningPrivateColumns, ", ")+" FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
 	params["email"] = email
@@ -228,7 +226,7 @@ func (repo *UserRepository) Create(userCreate *User) (*User, error) {
 
 	queryStr := fmt.Sprintf("INSERT INTO `%s` (KEY, VALUE) "+
 		"VALUES ($key, $user) "+
-		"RETURNING id, first_name, last_name, email, service, created_at, updated_at", couchbaseBucket)
+		"RETURNING "+strings.Join(returningColumns, ", "), couchbaseBucket)
 
 	params := make(map[string]interface{})
 
