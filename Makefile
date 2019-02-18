@@ -10,12 +10,7 @@ registry:
 	docker push eu.gcr.io/hprofits/user-service:latest
 
 deploy:
-	# protoc -I. --go_out=plugins=micro:. proto/user/user.proto
-
-	protoc -I . --gogofaster_out=plugins=micro:\
-	. proto/user/user.proto
-
-	# easyjson -all $(GOPATH)/src/github.com/gregory-vc/user-service/proto/user/user.pb.go
+	protoc -I. --go_out=plugins=micro:. proto/user/user.proto
 
 	sed "s/{{ UPDATED_AT }}/$(shell date)/g" ./deployments/deployment.tmpl > ./deployments/deployment.yml
 	go mod vendor
