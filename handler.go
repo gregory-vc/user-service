@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 
 	pb "github.com/gregory-vc/user-service/proto/user"
@@ -108,9 +107,9 @@ func (srv *service) CreateUser(ctx context.Context, req *pb.User, res *pb.User) 
 		return nil
 	}
 
-	fmt.Println(user)
+	pbUser := protobufFromModel(user)
 
-	res = protobufFromModel(user)
+	*res = *pbUser
 
 	if err := srv.publishEvent(req); err != nil {
 		log.Println(err)
