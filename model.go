@@ -8,15 +8,15 @@ import (
 )
 
 type User struct {
-	ID        uint64     `db:"id"`
-	CreatedAt *time.Time `db:"created_at"`
-	UpdatedAt *time.Time `db:"updated_at"`
-	FirstName string     `db:"first_name"`
-	LastName  string     `db:"last_name"`
-	Email     string     `db:"email"`
-	Password  string     `db:"password"`
-	Type      string     `db:"type"`
-	Service   string     `db:"service"`
+	ID        uint64     `json:"id,omitempty"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	FirstName string     `json:"first_name,omitempty"`
+	LastName  string     `json:"last_name,omitempty"`
+	Email     string     `json:"email,omitempty"`
+	Password  string     `json:"password,omitempty"`
+	Type      string     `json:"type,omitempty"`
+	Service   string     `json:"service,omitempty"`
 }
 
 func modelFromProtobuf(p *pb.User) *User {
