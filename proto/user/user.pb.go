@@ -6,7 +6,7 @@ package user
 import (
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
-	types "github.com/gogo/protobuf/types"
+	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	io "io"
 	math "math"
 )
@@ -23,15 +23,15 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
 type User struct {
-	Id        uint64           `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	CreatedAt *types.Timestamp `protobuf:"bytes,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt *types.Timestamp `protobuf:"bytes,3,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	FirstName string           `protobuf:"bytes,4,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
-	LastName  string           `protobuf:"bytes,5,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
-	Email     string           `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
-	Password  string           `protobuf:"bytes,7,opt,name=password,proto3" json:"password,omitempty"`
-	Type      string           `protobuf:"bytes,8,opt,name=type,proto3" json:"type,omitempty"`
-	Service   string           `protobuf:"bytes,9,opt,name=service,proto3" json:"service,omitempty"`
+	Id        uint64               `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	CreatedAt *timestamp.Timestamp `protobuf:"bytes,2,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt *timestamp.Timestamp `protobuf:"bytes,3,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	FirstName string               `protobuf:"bytes,4,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	LastName  string               `protobuf:"bytes,5,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	Email     string               `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
+	Password  string               `protobuf:"bytes,7,opt,name=password,proto3" json:"password,omitempty"`
+	Type      string               `protobuf:"bytes,8,opt,name=type,proto3" json:"type,omitempty"`
+	Service   string               `protobuf:"bytes,9,opt,name=service,proto3" json:"service,omitempty"`
 }
 
 func (m *User) Reset()         { *m = User{} }
@@ -74,14 +74,14 @@ func (m *User) GetId() uint64 {
 	return 0
 }
 
-func (m *User) GetCreatedAt() *types.Timestamp {
+func (m *User) GetCreatedAt() *timestamp.Timestamp {
 	if m != nil {
 		return m.CreatedAt
 	}
 	return nil
 }
 
-func (m *User) GetUpdatedAt() *types.Timestamp {
+func (m *User) GetUpdatedAt() *timestamp.Timestamp {
 	if m != nil {
 		return m.UpdatedAt
 	}
@@ -1045,7 +1045,7 @@ func (m *User) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.CreatedAt == nil {
-				m.CreatedAt = &types.Timestamp{}
+				m.CreatedAt = &timestamp.Timestamp{}
 			}
 			if err := m.CreatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
@@ -1081,7 +1081,7 @@ func (m *User) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.UpdatedAt == nil {
-				m.UpdatedAt = &types.Timestamp{}
+				m.UpdatedAt = &timestamp.Timestamp{}
 			}
 			if err := m.UpdatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err

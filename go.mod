@@ -15,6 +15,7 @@ require (
 	github.com/micro/go-plugins v0.24.1
 	github.com/micro/kubernetes v0.7.0
 	github.com/micro/protobuf v0.0.0-20180321161605-ebd3be6d4fdb // indirect
+	github.com/micro/protoc-gen-micro v0.6.0 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20190131182504-b8fe1690c613
 	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3
