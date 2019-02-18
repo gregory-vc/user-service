@@ -1,16 +1,17 @@
 build:
-		protoc -I. --go_out=plugins=micro:. proto/user/user.proto
-		go mod vendor
-		git add --all
-		git diff-index --quiet HEAD || git commit -a -m 'fix'
-		git push origin master
+	protoc -I. --go_out=plugins=micro:. proto/user/user.proto
+	go mod vendor
+	git add --all
+	git diff-index --quiet HEAD || git commit -a -m 'fix'
+	git push origin master
 
 registry:
-		docker build -t eu.gcr.io/hprofits/user-service:latest .
-		docker push eu.gcr.io/hprofits/user-service:latest
+	docker build -t eu.gcr.io/hprofits/user-service:latest .
+	docker push eu.gcr.io/hprofits/user-service:latest
 
 deploy:
 	# protoc -I. --go_out=plugins=micro:. proto/user/user.proto
+	
 	protoc -I. --gogofaster_out=plugins=micro,\
 	Mgoogle/protobuf/empty.proto=github.com/gogo/protobuf/types,\
 	Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types,\
