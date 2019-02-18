@@ -23,7 +23,7 @@ func (srv *service) GetUser(ctx context.Context, req *pb.ID, res *pb.User) error
 		log.Println(err)
 		return nil
 	}
-	*res = *user
+	*res = protobufFromModel(*user)
 	return nil
 }
 

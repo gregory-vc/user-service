@@ -3,9 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
+	"time"
 
-	"github.com/golang/protobuf/ptypes"
-	pb "github.com/gregory-vc/user-service/proto/user"
 	"gopkg.in/couchbase/gocb.v1"
 )
 
@@ -13,22 +12,22 @@ const primaryKey = "user_%d"
 const table = "user"
 
 type Repository interface {
-	GetAll() ([]*pb.User, error)
-	GetByIDs(ids []uint64) ([]*pb.User, error)
-	Get(id uint64) (*pb.User, error)
-	Delete(id uint64) (*pb.User, error)
-	Create(user *pb.User) (*pb.User, error)
-	Update(userUpdate *pb.User) (*pb.User, error)
-	GetByEmail(email string) (*pb.User, error)
+	GetAll() ([]*User, error)
+	GetByIDs(ids []uint64) ([]*User, error)
+	Get(id uint64) (*User, error)
+	Delete(id uint64) (*User, error)
+	Create(user *User) (*User, error)
+	Update(userUpdate *User) (*User, error)
+	GetByEmail(email string) (*User, error)
 }
 
 type UserRepository struct {
 	bucket *gocb.Bucket
 }
 
-func (repo *UserRepository) Delete(id uint64) (*pb.User, error) {
-	user := &pb.User{}
-	var users []*pb.User
+func (repo *UserRepository) Delete(id uint64) (*User, error) {
+	user := &User{}
+	var users []*User
 	queryStr := fmt.Sprintf("DELETE FROM `%s` "+
 		"USE KEYS $ids RETURNING id, first_name, last_name, email, service", couchbaseBucket)
 
@@ -46,7 +45,7 @@ func (repo *UserRepository) Delete(id uint64) (*pb.User, error) {
 
 	for rows.Next(&user) {
 		users = append(users, user)
-		user = &pb.User{}
+		user = &User{}
 	}
 
 	if len(users) <= 0 {
@@ -56,9 +55,9 @@ func (repo *UserRepository) Delete(id uint64) (*pb.User, error) {
 	return users[0], nil
 }
 
-func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
-	user := &pb.User{}
-	var users []*pb.User
+func (repo *UserRepository) Update(userUpdate *User) (*User, error) {
+	user := &User{}
+	var users []*User
 
 	queryStr := fmt.Sprintf("UPDATE `%s` SET "+
 		"first_name=$first_name, "+
@@ -73,8 +72,8 @@ func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
 	params["last_name"] = userUpdate.LastName
 	params["email"] = userUpdate.Email
 	params["type"] = table
-	params["id"] = userUpdate.Id
-	params["updated_at"] = ptypes.TimestampNow()
+	params["id"] = userUpdate.ID
+	params["updated_at"] = time.Now()
 
 	rows, err := repo.bucket.ExecuteN1qlQuery(gocb.NewN1qlQuery(queryStr), params)
 
@@ -84,7 +83,7 @@ func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
 
 	for rows.Next(&user) {
 		users = append(users, user)
-		user = &pb.User{}
+		user = &User{}
 	}
 
 	if len(users) <= 0 {
@@ -94,9 +93,9 @@ func (repo *UserRepository) Update(userUpdate *pb.User) (*pb.User, error) {
 	return users[0], nil
 }
 
-func (repo *UserRepository) GetAll() ([]*pb.User, error) {
-	user := &pb.User{}
-	var users []*pb.User
+func (repo *UserRepository) GetAll() ([]*User, error) {
+	user := &User{}
+	var users []*User
 	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` WHERE type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
@@ -110,15 +109,15 @@ func (repo *UserRepository) GetAll() ([]*pb.User, error) {
 
 	for rows.Next(&user) {
 		users = append(users, user)
-		user = &pb.User{}
+		user = &User{}
 	}
 
 	return users, nil
 }
 
-func (repo *UserRepository) GetByIDs(ids []uint64) ([]*pb.User, error) {
-	user := &pb.User{}
-	var users []*pb.User
+func (repo *UserRepository) GetByIDs(ids []uint64) ([]*User, error) {
+	user := &User{}
+	var users []*User
 	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` USE KEYS $ids", couchbaseBucket)
 	idsString := make([]string, len(ids))
 
@@ -137,16 +136,16 @@ func (repo *UserRepository) GetByIDs(ids []uint64) ([]*pb.User, error) {
 
 	for rows.Next(&user) {
 		users = append(users, user)
-		user = &pb.User{}
+		user = &User{}
 	}
 
 	return users, nil
 }
 
-func (repo *UserRepository) Get(id uint64) (*pb.User, error) {
+func (repo *UserRepository) Get(id uint64) (*User, error) {
 
-	user := &pb.User{}
-	var users []*pb.User
+	user := &User{}
+	var users []*User
 	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service FROM `%s` USE KEYS $ids", couchbaseBucket)
 	idsString := make([]string, 1)
 	idsString[0] = fmt.Sprintf(primaryKey, id)
@@ -162,7 +161,7 @@ func (repo *UserRepository) Get(id uint64) (*pb.User, error) {
 
 	for rows.Next(&user) {
 		users = append(users, user)
-		user = &pb.User{}
+		user = &User{}
 	}
 
 	if len(users) <= 0 {
@@ -172,8 +171,8 @@ func (repo *UserRepository) Get(id uint64) (*pb.User, error) {
 	return users[0], nil
 }
 
-func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
-	user := &pb.User{}
+func (repo *UserRepository) GetByEmail(email string) (*User, error) {
+	user := &User{}
 	queryStr := fmt.Sprintf("SELECT id, first_name, last_name, email, service, `password` FROM `%s` WHERE email=$email and type=$type", couchbaseBucket)
 
 	params := make(map[string]interface{})
@@ -186,7 +185,7 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 		return nil, err
 	}
 
-	users := []*pb.User{}
+	users := []*User{}
 
 	for rows.Next(&user) {
 		users = append(users, user)
@@ -199,7 +198,7 @@ func (repo *UserRepository) GetByEmail(email string) (*pb.User, error) {
 	return users[0], nil
 }
 
-func (repo *UserRepository) Create(userCreate *pb.User) (*pb.User, error) {
+func (repo *UserRepository) Create(userCreate *User) (*User, error) {
 
 	_, err := repo.GetByEmail(userCreate.Email)
 
@@ -218,13 +217,14 @@ func (repo *UserRepository) Create(userCreate *pb.User) (*pb.User, error) {
 	}
 
 	userKey := fmt.Sprintf(primaryKey, initialValue)
-	userCreate.Id = initialValue
+	now := time.Now()
+	userCreate.ID = initialValue
 	userCreate.Type = table
-	userCreate.CreatedAt = ptypes.TimestampNow()
-	userCreate.UpdatedAt = ptypes.TimestampNow()
+	userCreate.CreatedAt = &now
+	userCreate.UpdatedAt = &now
 
-	user := &pb.User{}
-	var users []*pb.User
+	user := &User{}
+	var users []*User
 
 	queryStr := fmt.Sprintf("INSERT INTO `%s` (KEY, VALUE) "+
 		"VALUES ($key, $user) "+
@@ -243,7 +243,7 @@ func (repo *UserRepository) Create(userCreate *pb.User) (*pb.User, error) {
 
 	for rows.Next(&user) {
 		users = append(users, user)
-		user = &pb.User{}
+		user = &User{}
 	}
 
 	if len(users) <= 0 {
