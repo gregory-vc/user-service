@@ -228,7 +228,7 @@ func (repo *UserRepository) Create(userCreate *User) (*User, error) {
 
 	queryStr := fmt.Sprintf("INSERT INTO `%s` (KEY, VALUE) "+
 		"VALUES ($key, $user) "+
-		"RETURNING id, first_name, last_name, email, service", couchbaseBucket)
+		"RETURNING id, first_name, last_name, email, service, created_at, updated_at", couchbaseBucket)
 
 	params := make(map[string]interface{})
 
