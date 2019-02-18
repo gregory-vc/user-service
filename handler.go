@@ -23,7 +23,8 @@ func (srv *service) GetUser(ctx context.Context, req *pb.ID, res *pb.User) error
 		log.Println(err)
 		return nil
 	}
-	res = protobufFromModel(user)
+	pbUser := protobufFromModel(user)
+	*res = *pbUser
 	return nil
 }
 
@@ -33,7 +34,8 @@ func (srv *service) UpdateUser(ctx context.Context, req *pb.User, res *pb.User) 
 		log.Println(err)
 		return nil
 	}
-	res = protobufFromModel(user)
+	pbUser := protobufFromModel(user)
+	*res = *pbUser
 	return nil
 }
 
@@ -43,7 +45,8 @@ func (srv *service) DeleteUser(ctx context.Context, req *pb.ID, res *pb.User) er
 		log.Println(err)
 		return nil
 	}
-	res = protobufFromModel(user)
+	pbUser := protobufFromModel(user)
+	*res = *pbUser
 	return nil
 }
 
