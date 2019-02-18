@@ -23,17 +23,17 @@ func (srv *service) GetUser(ctx context.Context, req *pb.ID, res *pb.User) error
 		log.Println(err)
 		return nil
 	}
-	*res = protobufFromModel(*user)
+	res = protobufFromModel(user)
 	return nil
 }
 
 func (srv *service) UpdateUser(ctx context.Context, req *pb.User, res *pb.User) error {
-	user, err := srv.repo.Update(req)
+	user, err := srv.repo.Update(modelFromProtobuf(req))
 	if err != nil {
 		log.Println(err)
 		return nil
 	}
-	*res = *user
+	res = protobufFromModel(user)
 	return nil
 }
 
@@ -43,7 +43,7 @@ func (srv *service) DeleteUser(ctx context.Context, req *pb.ID, res *pb.User) er
 		log.Println(err)
 		return nil
 	}
-	*res = *user
+	res = protobufFromModel(user)
 	return nil
 }
 
@@ -53,7 +53,7 @@ func (srv *service) ListUsers(ctx context.Context, req *pb.ListUsersRequest, res
 		log.Println(err)
 		return nil
 	}
-	res.Users = users
+	res.Users = protobufFromModelList(users)
 	res.Count = uint32(len(users))
 	return nil
 }
@@ -64,7 +64,7 @@ func (srv *service) ListUsersByIDs(ctx context.Context, req *pb.ListUsersByIDsRe
 		log.Println(err)
 		return nil
 	}
-	res.Users = users
+	res.Users = protobufFromModelList(users)
 	res.Count = uint32(len(users))
 	return nil
 }
@@ -101,13 +101,13 @@ func (srv *service) CreateUser(ctx context.Context, req *pb.User, res *pb.User) 
 	}
 	req.Password = string(hashedPass)
 
-	user, err := srv.repo.Create(req)
+	user, err := srv.repo.Create(modelFromProtobuf(req))
 	if err != nil {
 		log.Println(err)
 		return nil
 	}
 
-	*res = *user
+	res = protobufFromModel(user)
 
 	if err := srv.publishEvent(req); err != nil {
 		log.Println(err)
@@ -151,7 +151,7 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 		return nil
 	}
 
-	if claims.User.Id == 0 {
+	if claims.User.ID == 0 {
 		log.Println(errors.New("invalid user"))
 		res.Valid = false
 		return nil
