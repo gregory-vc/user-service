@@ -8,6 +8,7 @@ require (
 	github.com/golang/protobuf v1.2.0
 	github.com/jinzhu/gorm v1.9.2 // indirect
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
+	github.com/micro/cli v0.1.0
 	github.com/micro/go-micro v0.25.0
 	github.com/micro/go-plugins v0.24.1
 	github.com/micro/kubernetes v0.7.0
