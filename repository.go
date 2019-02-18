@@ -62,7 +62,7 @@ func (repo *UserRepository) Update(userUpdate *User) (*User, error) {
 
 	queryStr := fmt.Sprintf("UPDATE `%s` SET "+
 		strings.Join(updateColumns, ", ")+
-		"WHERE type=$type and id=$id RETURNING "+strings.Join(returningColumns, ", "), couchbaseBucket)
+		" WHERE type=$type and id=$id RETURNING "+strings.Join(returningColumns, ", "), couchbaseBucket)
 
 	params := make(map[string]interface{})
 
